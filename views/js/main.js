@@ -424,7 +424,7 @@ var resizePizzas = function(size) {
   // Returns the size difference to change a pizza element from one size to another. Called by changePizzaSlices(size).
   function determineDx (elem, size) {
     var oldwidth = elem.offsetWidth;
-    var windowwidth = document.querySelector("#randomPizzas").offsetWidth;
+    var windowwidth = document.getElementById("randomPizzas").offsetWidth;
     var oldsize = oldwidth / windowwidth;
 
     // TODO: change to 3 sizes? no more xl?
@@ -467,7 +467,7 @@ var resizePizzas = function(size) {
 
       var randomPizzas = document.getElementsByClassName('randomPizzaContainer');
 
-      for(var i = 0; i < randomPizzas.length; i++){
+      for(var i = 0; length = randomPizzas.length; i++){
           randomPizzas[i].style.width = newWidth + '%';
       }
   }
@@ -484,8 +484,9 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
+// moved pizzasDiv dom call outsite loop
+var pizzasDiv = document.getElementById("randomPizzas");
 for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
 
@@ -520,8 +521,10 @@ function updatePositions() {
   var items = document.getElementsByClassName('mover');
   // document.body moved outside loop
   var pizzaScroll = document.body.scrollTop / 1250;
-  for (var i = 0; i < items.length; i++) {
-    var phase = Math.sin(pizzaScroll + (i % 5));
+  // phase moved outside loop
+  var phase;
+  for (var i = 0; len = items.length; i++) {
+    phase = Math.sin(pizzaScroll + (i % 5));
     items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
     // items[i].style.transform = 'translateX(' + (100 * phase) + 'px)';
   }
@@ -544,8 +547,12 @@ window.addEventListener('scroll', updatePositions);
 document.addEventListener('DOMContentLoaded', function() {
   var cols = 8;
   var s = 256;
-  for (var i = 0; i < 200; i++) {
-    var elem = document.createElement('img');
+  // calculate pizzas needed to fill window
+  var pizzaNum = (window.screen.height / 75) + (window.screen.width / 75);
+  // elem moved out off loop
+  var elem;
+  for (var i = 0; i < pizzaNum; i++) {
+    elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "images/pizza.png";
     elem.style.height = "100px";
